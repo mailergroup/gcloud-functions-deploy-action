@@ -23,7 +23,7 @@ inputs:
     required: true
     default: "run"
   service_account:
-    description: "Service account that Cloud function will use"
+    description: "Service account e-mail that Cloud function will use"
     required: true
     default: "run"
   env_vars:
@@ -61,6 +61,12 @@ runs:
       run: |
         echo ${{ inputs.service_account_key }} | base64 -d > /tmp/key.json
         gcloud auth activate-service-account --key-file=/tmp/key.json
+
+    - name: Configure project and region
+      shell: bash
+      run: |
+        gcloud --quiet config set project ${{ inputs.project }}
+        gcloud --quiet config set compute/region ${{ inputs.region }}
 
     - name: Deploy Cloud Function
       shell: bash
