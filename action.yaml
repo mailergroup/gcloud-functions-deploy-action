@@ -76,7 +76,7 @@ runs:
         --allow-unauthenticated \
         --entry-point ${{ inputs.entry_point }} \
         --egress-settings ${{ inputs.egress_settings }} \
-        --ingress-settings ${{ inputs.ingress.settings }} \
+        --ingress-settings ${{ inputs.ingress_settings }} \
         --memory ${{ inputs.memory }} \
         --runtime ${{ inputs.runtime }} \
         --service-account ${{ inputs.service_account }} \
