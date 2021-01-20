@@ -1,0 +1,81 @@
+name: "Google Cloud Functions deploy action"
+description: "Setup gcloud auth and deploy HTTP-triggered function using gcloud"
+inputs:
+  service_account_key:
+    description: "Google Service Key"
+    required: true
+    default: ""
+  project:
+    description: "Google Project"
+    required: true
+  name:
+    description: "Cloud Function name"
+    required: true
+  region:
+    description: "Google Region"
+    required: true
+  runtime:
+    description: "Cloud funtion's runtime"
+    required: true
+    default: "python38"
+  entry_point:
+    description: "Cloud funtion's entry point function"
+    required: true
+    default: "run"
+  service_account:
+    description: "Service account that Cloud function will use"
+    required: true
+    default: "run"
+  env_vars:
+    description: "Runtime environment variables to insert"
+    required: false
+  vpc_connector:
+    description: "Which VPC connector to use"
+    required: false
+    default: "vpc-connector"
+  max_instances:
+    description: "Max concurrent instances"
+    required: false
+    default: "1"
+  memory:
+    description: "Limit of the amount of memory the function can use"
+    required: false
+    default: "128MB"
+  timeout:
+    description: "Timeout for the Cloud function (defaults to 30s)"
+    required: false
+    default: "30"
+  egress_settings:
+    description: "Egress settings (private-ranges-only|all) "
+    required: false
+    default: "private-ranges-only"
+  ingress_settings:
+    description: "Ingress settings (internal-and-gclb|internal-only|all) "
+    required: false
+    default: "internal-and-gclb"
+runs:
+  using: "composite"
+  steps:
+    - name: Authenticate with Google Cloud
+      shell: bash
+      run: |
+        echo ${{ inputs.service_account_key }} | base64 -d > /tmp/key.json
+        gcloud auth activate-service-account --key-file=/tmp/key.json
+
+    - name: Deploy Cloud Function
+      shell: bash
+      run: |
+        gcloud --quiet functions deploy ${{ inputs.name }} \
+        --region ${{ inputs.region }} \
+        --allow-unauthenticated \
+        --entry-point ${{ inputs.entry_point }} \
+        --egress-settings ${{ inputs.egress_settings }} \
+        --ingress-settings ${{ inputs.ingress.settings }} \
+        --memory ${{ inputs.memory }} \
+        --runtime ${{ inputs.runtime }} \
+        --service-account ${{ inputs.service_account }} \
+        --timeout ${{ inputs.timeout }} \
+        --set-env-vars ${{ inputs.env_vars }} \
+        --max-instances ${{ inputs.max_instances }} \
+        --vpc-connector ${{ inputs.vpc_connector }} \
+        --trigger-http
