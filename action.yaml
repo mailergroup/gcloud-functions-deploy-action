@@ -79,7 +79,7 @@ runs:
     - name: Deploy HTTP-triggered Cloud Function
       shell: bash
       run: |
-        if ${{ inputs.trigger_type }} == 'http'; then \
+        if [ "${{ inputs.trigger_type }}" == "http" ]; then \
         gcloud --quiet functions deploy ${{ inputs.name }} \
         --region ${{ inputs.region }} \
         --allow-unauthenticated \
@@ -98,7 +98,7 @@ runs:
     - name: Deploy Pub/Sub-triggered Cloud Function
       shell: bash
       run: |
-        if ${{ inputs.trigger_type }} == 'pubsub'; then \
+        if [ "${{ inputs.trigger_type }}" == "pubsub" ]; then \
         gcloud --quiet functions deploy ${{ inputs.name }} \
         --region ${{ inputs.region }} \
         --allow-unauthenticated \
