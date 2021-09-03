@@ -53,6 +53,14 @@ inputs:
     description: "Ingress settings (internal-and-gclb|internal-only|all) "
     required: false
     default: "internal-and-gclb"
+  trigger_type:
+    description: "Trigger type (http|pubsub)"
+    required: true
+    default: "http"
+  trigger_topic:
+    description: "Trigger topic (creates subscription if it doesn't exist)"
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -68,7 +76,7 @@ runs:
         gcloud --quiet config set project ${{ inputs.project }}
         gcloud --quiet config set compute/region ${{ inputs.region }}
 
-    - name: Deploy Cloud Function
+    - name: Deploy HTTP-triggered Cloud Function
       shell: bash
       run: |
         gcloud --quiet functions deploy ${{ inputs.name }} \
@@ -85,3 +93,23 @@ runs:
         --max-instances ${{ inputs.max_instances }} \
         --vpc-connector ${{ inputs.vpc_connector }} \
         --trigger-http
+      if: ${{ inputs.trigger_type }} == 'http'
+
+    - name: Deploy Pub/Sub-triggered Cloud Function
+      shell: bash
+      run: |
+        gcloud --quiet functions deploy ${{ inputs.name }} \
+        --region ${{ inputs.region }} \
+        --allow-unauthenticated \
+        --entry-point ${{ inputs.entry_point }} \
+        --egress-settings ${{ inputs.egress_settings }} \
+        --ingress-settings ${{ inputs.ingress_settings }} \
+        --memory ${{ inputs.memory }} \
+        --runtime ${{ inputs.runtime }} \
+        --service-account ${{ inputs.service_account }} \
+        --timeout ${{ inputs.timeout }} \
+        --set-env-vars ${{ inputs.env_vars }} \
+        --max-instances ${{ inputs.max_instances }} \
+        --vpc-connector ${{ inputs.vpc_connector }} \
+        --trigger-topic ${{ inputs.trigger_topic }}
+      if: ${{ inputs.trigger_type }} == 'pubsub'
