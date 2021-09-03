@@ -1,6 +1,6 @@
 # gcloud-functions-deploy-action
 
-Builds and deploys a HTTP-triggered Google Cloud Function.
+Builds and deploys a HTTP- or Pub/Sub triggered Google Cloud Function.
 
 # Required Inputs: *
 
@@ -16,6 +16,8 @@ Builds and deploys a HTTP-triggered Google Cloud Function.
 
 **service_account** - The service account email used by the function
 
+**trigger_type** - The kind of GCF trigger (`http` or `pubsub`)
+
 # Optional Inputs:
 
 Based on what you wish to do in this action.
@@ -29,6 +31,8 @@ Based on what you wish to do in this action.
 **memory** - Limit of the amount of memory the function can use
 
 **timeout** - Timeout for the Cloud function (in seconds) - defaults to 30
+
+**trigger_topic** - The Pub/Sub topic to subscribe to
 
 **egress_settings** - Egress settings. Available options:
   - private-ranges-only
