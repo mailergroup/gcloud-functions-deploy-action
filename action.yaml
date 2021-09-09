@@ -29,10 +29,14 @@ inputs:
   env_vars:
     description: "Runtime environment variables to insert"
     required: false
+  allow_unauthenticated:
+    description: "Allow unauthenticated requests"
+    required: false
+    default: true
   vpc_connector:
     description: "Which VPC connector to use"
     required: false
-    default: "vpc-connector"
+    default: "default-none"
   max_instances:
     description: "Max concurrent instances"
     required: false
@@ -76,32 +80,49 @@ runs:
         gcloud --quiet config set project ${{ inputs.project }}
         gcloud --quiet config set compute/region ${{ inputs.region }}
 
-    - name: Deploy HTTP-triggered Cloud Function
-      shell: bash
-      run: |
-        if [ "${{ inputs.trigger_type }}" == "http" ]; then \
-        gcloud --quiet functions deploy ${{ inputs.name }} \
-        --region ${{ inputs.region }} \
-        --allow-unauthenticated \
-        --entry-point ${{ inputs.entry_point }} \
-        --egress-settings ${{ inputs.egress_settings }} \
-        --ingress-settings ${{ inputs.ingress_settings }} \
-        --memory ${{ inputs.memory }} \
-        --runtime ${{ inputs.runtime }} \
-        --service-account ${{ inputs.service_account }} \
-        --timeout ${{ inputs.timeout }} \
-        --set-env-vars ${{ inputs.env_vars }} \
-        --max-instances ${{ inputs.max_instances }} \
-        --vpc-connector ${{ inputs.vpc_connector }} \
-        --trigger-http; fi
+    # - name: Deploy HTTP-triggered Cloud Function
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ inputs.trigger_type }}" == "http" ]; then \
+    #     gcloud --quiet functions deploy ${{ inputs.name }} \
+    #     --region ${{ inputs.region }} \
+    #     --allow-unauthenticated \
+    #     --entry-point ${{ inputs.entry_point }} \
+    #     --egress-settings ${{ inputs.egress_settings }} \
+    #     --ingress-settings ${{ inputs.ingress_settings }} \
+    #     --memory ${{ inputs.memory }} \
+    #     --runtime ${{ inputs.runtime }} \
+    #     --service-account ${{ inputs.service_account }} \
+    #     --timeout ${{ inputs.timeout }} \
+    #     --set-env-vars ${{ inputs.env_vars }} \
+    #     --max-instances ${{ inputs.max_instances }} \
+    #     --vpc-connector ${{ inputs.vpc_connector }} \
+    #     --trigger-http; fi
 
-    - name: Deploy Pub/Sub-triggered Cloud Function
+    # - name: Deploy Pub/Sub-triggered Cloud Function
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ inputs.trigger_type }}" == "pubsub" ]; then \
+    #     gcloud --quiet functions deploy ${{ inputs.name }} \
+    #     --region ${{ inputs.region }} \
+    #     --allow-unauthenticated \
+    #     --entry-point ${{ inputs.entry_point }} \
+    #     --egress-settings ${{ inputs.egress_settings }} \
+    #     --ingress-settings ${{ inputs.ingress_settings }} \
+    #     --memory ${{ inputs.memory }} \
+    #     --runtime ${{ inputs.runtime }} \
+    #     --service-account ${{ inputs.service_account }} \
+    #     --timeout ${{ inputs.timeout }} \
+    #     --set-env-vars ${{ inputs.env_vars }} \
+    #     --max-instances ${{ inputs.max_instances }} \
+    #     --vpc-connector ${{ inputs.vpc_connector }} \
+    #     --trigger-topic ${{ inputs.trigger_topic }}; fi
+
+    - name: Deploy Google Cloud Function
       shell: bash
       run: |
-        if [ "${{ inputs.trigger_type }}" == "pubsub" ]; then \
-        gcloud --quiet functions deploy ${{ inputs.name }} \
+        CMD="gcloud --quiet functions deploy ${{ inputs.name }} \
         --region ${{ inputs.region }} \
-        --allow-unauthenticated \
         --entry-point ${{ inputs.entry_point }} \
         --egress-settings ${{ inputs.egress_settings }} \
         --ingress-settings ${{ inputs.ingress_settings }} \
@@ -109,7 +130,20 @@ runs:
         --runtime ${{ inputs.runtime }} \
         --service-account ${{ inputs.service_account }} \
         --timeout ${{ inputs.timeout }} \
-        --set-env-vars ${{ inputs.env_vars }} \
-        --max-instances ${{ inputs.max_instances }} \
-        --vpc-connector ${{ inputs.vpc_connector }} \
-        --trigger-topic ${{ inputs.trigger_topic }}; fi
+        --max-instances ${{ inputs.max_instances }}"
+
+        if [ "${{ inputs.vpc_connector }}" != "default-none" ]; then
+          CMD="$CMD --vpc_connector ${{ inputs.vpc_connector }}"
+        fi
+
+        if [ ${{ inputs.allow_unauthenticated }} == true ]; then
+          CMD="$CMD --allow-unauthenticated"
+        fi
+
+        if [ "${{ inputs.trigger_type }}" == "http" ]; then
+          CMD="$CMD --tigger-http"
+        elif [ "${{ inputs.trigger_type }}" == "pubsub" ]; then
+          CMD="$CMD --trigger-topic ${{ inputs.trigger_topic }}"
+        fi
+
+        $CMD
