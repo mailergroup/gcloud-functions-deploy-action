@@ -96,7 +96,7 @@ runs:
         --max-instances ${{ inputs.max_instances }}"
 
         if [ "${{ inputs.vpc_connector }}" != "default-none" ]; then
-          CMD="$CMD --vpc_connector ${{ inputs.vpc_connector }} \
+          CMD="$CMD --vpc-connector ${{ inputs.vpc_connector }} \
           --egress-settings ${{ inputs.egress_settings }}"
         fi
 
