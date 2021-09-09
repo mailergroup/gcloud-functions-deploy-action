@@ -29,7 +29,7 @@ inputs:
   env_vars:
     description: "Runtime environment variables to insert"
     required: false
-    default: "default-none"
+    default: ""
   allow_unauthenticated:
     description: "Allow unauthenticated requests"
     required: false
@@ -37,7 +37,7 @@ inputs:
   vpc_connector:
     description: "Which VPC connector to use"
     required: false
-    default: "default-none"
+    default: ""
   max_instances:
     description: "Max concurrent instances"
     required: false
@@ -95,12 +95,12 @@ runs:
         --timeout ${{ inputs.timeout }} \
         --max-instances ${{ inputs.max_instances }}"
 
-        if [ "${{ inputs.vpc_connector }}" != "default-none" ]; then
+        if [ "${{ inputs.vpc_connector }}" != "" ]; then
           CMD="$CMD --vpc-connector ${{ inputs.vpc_connector }} \
           --egress-settings ${{ inputs.egress_settings }}"
         fi
 
-        if [ "${{ inputs.env_vars }}" != "default-none" ]; then
+        if [ "${{ inputs.env_vars }}" != "" ]; then
           CMD="$CMD --set-env-vars ${{ inputs.env_vars }}"
         fi
 
