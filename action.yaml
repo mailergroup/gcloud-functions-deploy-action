@@ -62,6 +62,7 @@ inputs:
     description: "Trigger type (http|pubsub)"
     required: true
     default: "http"
+    deprecationMessage: "Input trigger_type is deprecated. If inputs.trigger_topic is not specified, a HTTP-triggered GCF is deployed"
   trigger_topic:
     description: "Trigger topic (creates subscription if it doesn't exist)"
     required: false
@@ -107,10 +108,10 @@ runs:
           CMD="$CMD --allow-unauthenticated"
         fi
 
-        if [ "${{ inputs.trigger_type }}" == "http" ]; then
-          CMD="$CMD --tigger-http"
-        elif [ "${{ inputs.trigger_type }}" == "pubsub" ]; then
+        if [ "${{ inputs.trigger_topic }}" != "" ]; then
           CMD="$CMD --trigger-topic ${{ inputs.trigger_topic }}"
+        else 
+          CMD="$CMD --trigger-http"
         fi
 
         $CMD
