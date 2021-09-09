@@ -87,7 +87,6 @@ runs:
         CMD="gcloud --quiet functions deploy ${{ inputs.name }} \
         --region ${{ inputs.region }} \
         --entry-point ${{ inputs.entry_point }} \
-        --egress-settings ${{ inputs.egress_settings }} \
         --ingress-settings ${{ inputs.ingress_settings }} \
         --memory ${{ inputs.memory }} \
         --runtime ${{ inputs.runtime }} \
@@ -96,7 +95,8 @@ runs:
         --max-instances ${{ inputs.max_instances }}"
 
         if [ "${{ inputs.vpc_connector }}" != "default-none" ]; then
-          CMD="$CMD --vpc_connector ${{ inputs.vpc_connector }}"
+          CMD="$CMD --vpc_connector ${{ inputs.vpc_connector }} \
+          --egress-settings ${{ inputs.egress_settings }}"
         fi
 
         if [ "${{ inputs.env_vars }}" != "default-none" ]; then
