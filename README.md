@@ -1,6 +1,6 @@
 # gcloud-functions-deploy-action
 
-Builds and deploys a HTTP- or Pub/Sub triggered Google Cloud Function.
+Builds and deploys a HTTP- or Pub/Sub-triggered Google Cloud Function.
 
 # Required Inputs: *
 
@@ -16,7 +16,7 @@ Builds and deploys a HTTP- or Pub/Sub triggered Google Cloud Function.
 
 **service_account** - The service account email used by the function
 
-**trigger_type** - The kind of GCF trigger (`http` or `pubsub`)
+(DEPRECATED) ~**trigger_type** - The kind of GCF trigger (`http` or `pubsub`)~
 
 # Optional Inputs:
 
@@ -32,9 +32,9 @@ Based on what you wish to do in this action.
 
 **timeout** - Timeout for the Cloud function (in seconds) - defaults to 30
 
-**trigger_topic** - The Pub/Sub topic to subscribe to
+**trigger_topic** - The Pub/Sub topic to subscribe to. If this is enabled, Pub/Sub trigger is assumed. 
 
-**egress_settings** - Egress settings. Available options:
+**egress_settings** - Egress settings for VPC connector. Will only be applied if `vpc_connector` is also specified. Available options:
   - private-ranges-only
   - all
 
@@ -45,8 +45,10 @@ Based on what you wish to do in this action.
 
 # Example usage
 
+## HTTP-triggered GCF with VPC connector
+
 ``` yaml
-- uses: remotecompany/gcloud-functions-deploy-action@main
+- uses: remotecompany/gcloud-functions-deploy-action@v1
   with:
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
     project: "remotecompany"
@@ -61,5 +63,25 @@ Based on what you wish to do in this action.
     memory: "128MB"
     timeout: 30
     egress_settings: private-ranges-only
+    ingress_settings: internal-and-gclb
+```
+
+## Pub/Sub topic triggered GCF
+
+```yaml
+- uses: remotecompany/gcloud-functions-deploy-action@v1
+  with:
+    service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
+    project: "remotecompany"
+    name: "my-cloud-function"
+    region: "europe-west1"
+    runtime: "python38"
+    entry_point: "run"
+    service_account: "github-actions@remotecompany.iam.gserviceaccount.com"
+    env_vars: SECRET1=${{ secrets.SECRET1 }},SECRET2=${{ secrets.SECRET2 }}
+    max_instances: 1
+    memory: "128MB"
+    trigger_topic: my-pubsub-topic
+    timeout: 30
     ingress_settings: internal-and-gclb
 ```
