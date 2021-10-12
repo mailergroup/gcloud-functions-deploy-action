@@ -4,7 +4,7 @@ Builds and deploys a HTTP- or Pub/Sub-triggered Google Cloud Function.
 
 # Required Inputs: *
 
-**service_account_key** - A Google service account key that has at least `roles/cloudfunctions.admin` and `roles/iam.serviceAccountUser`.
+**service_account_key** - A **base64-encoded** Google service account key that has at least `roles/cloudfunctions.admin` and `roles/iam.serviceAccountUser`.
 
 **project** - The Google account project
 
