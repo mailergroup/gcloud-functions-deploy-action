@@ -48,7 +48,7 @@ Based on what you wish to do in this action.
 ## HTTP-triggered GCF with VPC connector
 
 ``` yaml
-- uses: remotecompany/gcloud-functions-deploy-action@v1
+- uses: mailergroup/gcloud-functions-deploy-action@v1
   with:
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
     project: "remotecompany"
@@ -56,7 +56,7 @@ Based on what you wish to do in this action.
     region: "europe-west1"
     runtime: "python38"
     entry_point: "run"
-    service_account: "github-actions@remotecompany.iam.gserviceaccount.com"
+    service_account: "github-actions@mailergroup.iam.gserviceaccount.com"
     env_vars: SECRET1=${{ secrets.SECRET1 }},SECRET2=${{ secrets.SECRET2 }}
     vpc_connector: "my-vpc-connector"
     max_instances: 1
@@ -69,7 +69,7 @@ Based on what you wish to do in this action.
 ## Pub/Sub topic triggered GCF
 
 ```yaml
-- uses: remotecompany/gcloud-functions-deploy-action@v1
+- uses: mailergroup/gcloud-functions-deploy-action@v1
   with:
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
     project: "remotecompany"
@@ -77,7 +77,7 @@ Based on what you wish to do in this action.
     region: "europe-west1"
     runtime: "python38"
     entry_point: "run"
-    service_account: "github-actions@remotecompany.iam.gserviceaccount.com"
+    service_account: "github-actions@mailergroup.iam.gserviceaccount.com"
     env_vars: SECRET1=${{ secrets.SECRET1 }},SECRET2=${{ secrets.SECRET2 }}
     max_instances: 1
     memory: "128MB"
