@@ -51,7 +51,7 @@ Based on what you wish to do in this action.
 - uses: mailergroup/gcloud-functions-deploy-action@v1
   with:
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
-    project: "remotecompany"
+    project: "mailergroup"
     name: "my-cloud-function"
     region: "europe-west1"
     runtime: "python38"
@@ -72,7 +72,7 @@ Based on what you wish to do in this action.
 - uses: mailergroup/gcloud-functions-deploy-action@v1
   with:
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
-    project: "remotecompany"
+    project: "mailergroup"
     name: "my-cloud-function"
     region: "europe-west1"
     runtime: "python38"
