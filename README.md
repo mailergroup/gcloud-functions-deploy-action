@@ -53,10 +53,10 @@ Based on what you wish to do in this action.
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
     project: "mailergroup"
     name: "my-cloud-function"
-    region: "europe-west1"
+    region: "ZONE"
     runtime: "python38"
     entry_point: "run"
-    service_account: "github-actions@mailergroup.iam.gserviceaccount.com"
+    service_account: "SERVICE_ACCOUNT_NAME"
     env_vars: SECRET1=${{ secrets.SECRET1 }},SECRET2=${{ secrets.SECRET2 }}
     vpc_connector: "my-vpc-connector"
     max_instances: 1
@@ -74,10 +74,10 @@ Based on what you wish to do in this action.
     service_account_key: ${{ secrets.GOOGLE_SERVICE_KEY }}
     project: "mailergroup"
     name: "my-cloud-function"
-    region: "europe-west1"
+    region: "ZONE"
     runtime: "python38"
     entry_point: "run"
-    service_account: "github-actions@mailergroup.iam.gserviceaccount.com"
+    service_account: "SERVICE_ACCOUNT_NAME"
     env_vars: SECRET1=${{ secrets.SECRET1 }},SECRET2=${{ secrets.SECRET2 }}
     max_instances: 1
     memory: "128MB"
